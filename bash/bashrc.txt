@@ -1,0 +1,10 @@
+# Automatic background backup loop for .bashrc
+if ! pgrep -f "inotifywait.*\.bashrc" > /dev/null; then
+    (
+        while inotifywait -e close_write "$HOME/.bashrc" &>/dev/null; do
+            mkdir -p "$HOME/.bahsrc-backup-files"
+            cp "$HOME/.bashrc" "$HOME/.bahsrc-backup-files/.bashrc-$(date +%Y%m%d-%H%M%S)"
+        done
+    ) & disown
+fi
+
